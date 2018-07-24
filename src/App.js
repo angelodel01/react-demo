@@ -150,12 +150,13 @@ class Login extends React.Component {
     if (redirectToReferrer) {
       return <Redirect to={from} />;
     }
+    // <div>
+    //   <p>You must log in to view the page at {from.pathname}</p>
+    //   <button className="button" onClick={this.login}>Log in</button>
+    // </div>
 
     return (
-      <div>
-        <p>You must log in to view the page at {from.pathname}</p>
-        <button className="button" onClick={this.login}>Log in</button>
-      </div>
+      this.login()
     );
   }
 }
