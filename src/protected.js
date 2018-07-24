@@ -1,5 +1,4 @@
-import { createTable, createDiv, createParagraph} from "./DOMFunction.js"
-import { getCookie } from "./App.js"
+import { createTable, createDiv, createParagraph, getCookie} from "./DOMFunction.js"
 
 export function protectedContent(){
 	console.log("inside protectedContent()");

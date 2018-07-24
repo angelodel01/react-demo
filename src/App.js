@@ -1,36 +1,11 @@
 import React from "react";
 
+import { removeProtected, getCookie, setCookie } from './DOMFunction'
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter} from 'react-router-dom'
 import { searchFunction } from './stock.js'
 import { accessFunction } from './repo.js'
 import { personSearch } from './personSearch.js'
 import { protectedContent } from './protected.js'
-
-
-
-export function getCookie(cname) {
-	console.log("inside getCookie()");
-	var name = cname + "=";
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for(var i = 0; i <ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return "";
-}
-
-function setCookie(cname, cvalue, exsecs) {
-	var d = new Date();
-	d.setTime(d.getTime() + exsecs*1000)
-	var expires = "expires="+d.toUTCString();
-	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 
 
 const App = () => (
@@ -50,35 +25,6 @@ const App = () => (
      </Router>
     </div>
 );
-
-
-function checkFunction(){
-  console.log("window.location.hash :", window.location.hash)
-  let keyUrl = window.location.hash.substring(1);
-  if (keyUrl.includes("id_token")){
-    var id_tokenVal = keyUrl.substring("id_token=".length, keyUrl.indexOf("&"))
-    var exprIndex = keyUrl.indexOf("expires_in") + "expires_in=".length
-    var exprVal = keyUrl.substring(exprIndex, keyUrl.indexOf("&", exprIndex))
-    console.log("expiration time : ", exprVal);
-    setCookie("id_token", id_tokenVal, exprVal);
-    window.location = window.location.origin
-  }
-
-  const key = getCookie("id_token");
-  if (key !== ""){
-    Auth.authenticate(() => {
-         Login.State = { redirectToReferrer: true };
-       });
-  }
-  return;
-}
-
-function removeProtected(){
-  const temp = getElementById("temp");
-  if (temp != undefined){
-    temp.parentNode.removeChild(temp);
-  }
-}
 
 
 class Home extends React.Component {
@@ -133,14 +79,6 @@ const PersonSearch = () => (
     <Link to="/"><button className= "button">Home</button></Link>
   </div>
 );
-
-// const Protected = () => (
-//   <div>
-//     <div id="contentItems" className="text">
-//     </div>
-//     <Link to="/"><button className= "button">Home</button></Link>
-//   </div>
-// );
 
 class Protected extends React.Component {
   render(){
@@ -222,11 +160,30 @@ class Login extends React.Component {
   }
 }
 
+
+function checkFunction(){
+  console.log("window.location.hash :", window.location.hash)
+  let keyUrl = window.location.hash.substring(1);
+  if (keyUrl.includes("id_token")){
+    var id_tokenVal = keyUrl.substring("id_token=".length, keyUrl.indexOf("&"))
+    var exprIndex = keyUrl.indexOf("expires_in") + "expires_in=".length
+    var exprVal = keyUrl.substring(exprIndex, keyUrl.indexOf("&", exprIndex))
+    console.log("expiration time : ", exprVal);
+    setCookie("id_token", id_tokenVal, exprVal);
+    window.location = window.location.origin
+  }
+
+  const key = getCookie("id_token");
+  if (key !== ""){
+    Auth.authenticate(() => {
+         Login.State = { redirectToReferrer: true };
+       });
+  }
+  return;
+}
+
+
 export default App;
-
-
-
-
 
 
 // import React, { Component } from 'react';
