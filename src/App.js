@@ -4,6 +4,33 @@ import { BrowserRouter as Router, Route, Link, Redirect, withRouter} from 'react
 import { searchFunction } from './stock.js'
 import { accessFunction } from './repo.js'
 import { personSearch } from './personSearch.js'
+import { protectedContent } from './protected.js'
+
+
+
+export function getCookie(cname) {
+	console.log("inside getCookie()");
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
+function setCookie(cname, cvalue, exsecs) {
+	var d = new Date();
+	d.setTime(d.getTime() + exsecs*1000)
+	var expires = "expires="+d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 
 const App = () => (
@@ -13,26 +40,71 @@ const App = () => (
        <div id ="ogB">
 
          <hr />
-
          <Route exact path="/" component={Home} />
          <Route path="/stock" component={Stock} />
          <Route path="/repo" component={Repo} />
-         <Route path="/protected" component={Protected} />
+         <Route path="/login" component={Login} />
+         <PrivateRoute path="/protected" component={Protected} />
          <Route path="/personSearch" component={PersonSearch} />
        </div>
      </Router>
     </div>
 );
 
-const Home = () => (
-  <div>
-    <h2 id= "title">HTML Buttons</h2>
-      <Link to="/repo"><button className= "button">Display Repos</button></Link>
-      <Link to="/stock"><button className= "button">Check Stock Info</button></Link>
-      <Link to="/protected"><button className= "button">Protected Resource</button></Link>
-      <Link to="/personSearch"><button className= "button">Search Directory</button></Link>
-  </div>
-);
+
+function checkFunction(){
+  console.log("window.location.hash :", window.location.hash)
+  let keyUrl = window.location.hash.substring(1);
+  if (keyUrl.includes("id_token")){
+    var id_tokenVal = keyUrl.substring("id_token=".length, keyUrl.indexOf("&"))
+    var exprIndex = keyUrl.indexOf("expires_in") + "expires_in=".length
+    var exprVal = keyUrl.substring(exprIndex, keyUrl.indexOf("&", exprIndex))
+    console.log("expiration time : ", exprVal);
+    setCookie("id_token", id_tokenVal, exprVal);
+    window.location = window.location.origin
+  }
+
+  const key = getCookie("id_token");
+  if (key !== ""){
+    Auth.authenticate(() => {
+         Login.State = { redirectToReferrer: true };
+       });
+  }
+  return;
+}
+
+function removeProtected(){
+  const temp = getElementById("temp");
+  if (temp != undefined){
+    temp.parentNode.removeChild(temp);
+  }
+}
+
+
+class Home extends React.Component {
+  render(){
+    checkFunction();
+    removeProtected();
+     return (
+        <div>
+          <h2 id= "title">HTML Buttons</h2>
+            <Link to="/repo"><button className= "button">Display Repos</button></Link>
+            <Link to="/stock"><button className= "button">Check Stock Info</button></Link>
+            <Link to="/protected"><button className= "button">Protected Resource</button></Link>
+            <Link to="/personSearch"><button className= "button">Search Directory</button></Link>
+        </div>
+     )}
+}
+
+// const Home = () => (
+//   <div>
+//     <h2 id= "title">HTML Buttons</h2>
+//       <Link to="/repo"><button className= "button">Display Repos</button></Link>
+//       <Link to="/stock"><button className= "button">Check Stock Info</button></Link>
+//       <Link to="/protected"><button className= "button">Protected Resource</button></Link>
+//       <Link to="/personSearch"><button className= "button">Search Directory</button></Link>
+//   </div>
+// );
 
 const Stock = () => (
    <div id="contentItems" className="text">
@@ -62,12 +134,93 @@ const PersonSearch = () => (
   </div>
 );
 
-const Protected = () => (
-  <div>
-    <Link to="/"><button className= "button">Home</button></Link>
-  </div>
+// const Protected = () => (
+//   <div>
+//     <div id="contentItems" className="text">
+//     </div>
+//     <Link to="/"><button className= "button">Home</button></Link>
+//   </div>
+// );
+
+class Protected extends React.Component {
+  render(){
+     protectedContent()
+     return (
+          <div id="contentItems" className="text">
+          <Link to="/"><button className= "button">Home</button></Link>
+        </div>
+     )}
+}
+
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      Auth.isAuthenticated ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/login",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
 );
 
+
+const Auth = {
+  isAuthenticated: false,
+  authenticate(cb) {
+    this.isAuthenticated = true;
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    this.isAuthenticated = false;
+    setTimeout(cb, 100);
+  }
+};
+
+
+class Login extends React.Component {
+  state = {
+    redirectToReferrer: false
+  };
+
+  // login = () => {
+  //   fakeAuth.authenticate(() => {
+  //     this.setState({ redirectToReferrer: true });
+  //   });
+  // };
+
+  login = () => {
+     let client_id = "2fior6770hvto4u6kuq084j7fu";
+     let redirect_uri = "http://localhost:3000/";
+     let loginUrl = `https://cognito-dev.calpoly.edu/login?response_type=token&` +
+     `client_id=${client_id}&redirect_uri=${redirect_uri}`;
+     window.location = loginUrl;
+ }
+
+
+  render() {
+    const { from } = this.props.location.state || { from: { pathname: "/" } };
+    const { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer) {
+      return <Redirect to={from} />;
+    }
+
+    return (
+      <div>
+        <p>You must log in to view the page at {from.pathname}</p>
+        <button className="button" onClick={this.login}>Log in</button>
+      </div>
+    );
+  }
+}
 
 export default App;
 

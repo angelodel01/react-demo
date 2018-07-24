@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "express": "^4.16.3",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
@@ -13,5 +14,18 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "description": "Angelo De Laurentis under John Morton for Cal Poly ITS",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angelodel01/react-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angelodel01/react-demo/issues"
+  },
+  "homepage": "https://github.com/angelodel01/react-demo#readme"
 }
