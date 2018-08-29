@@ -3,17 +3,6 @@ import { createTable, createDiv, createParagraph, getCookie} from "./DOMFunction
 export function protectedContent(){
 	console.log("inside protectedContent()");
 
-	// var key = getCookie("id_token");
-	// if (key == ""){
-	// 	let client_id = "2fior6770hvto4u6kuq084j7fu";
-	// 	let redirect_uri = "https://angelodel01.github.io";
-	// 	let loginUrl = `https://cognito-dev.calpoly.edu/login?response_type=token&` +
-	// 	`client_id=${client_id}&redirect_uri=${redirect_uri}`;
-	//
-	// 	window.location = loginUrl
-	// 	return;
-	// }
-	//
 
 	createDiv("temp", "text")
 	createParagraph("display", "temp");

@@ -1,0 +1,57 @@
+{
+	"projectPath": "/Users/amdelaur/Desktop/react-demo-amplified/react-demo",
+	"projectInfo": {
+		"ProjectName": "react-demo",
+		"ProjectPath": "/Users/amdelaur/Desktop/react-demo-amplified/react-demo",
+		"InitializationTime": "",
+		"LastConfigurationTime": "",
+		"LastNPMInstallTime": "",
+		"FrontendLastBuildTime": "",
+		"LastPublishTime": "",
+		"BackendLastSyncTime": "",
+		"BackendLastBuildTime": "",
+		"BackendLastPushTime": "",
+		"BackendProjectID": "",
+		"BackendProjectName": "",
+		"BackendProjectConsoleUrl": "",
+		"BackendProjectCreationTime": "",
+		"BackendProjectLastUpdatedTime": "",
+		"Framework": "react"
+	},
+	"packageJson": {
+		"name": "react-demo",
+		"version": "0.1.0",
+		"private": true,
+		"dependencies": {
+			"aws-amplify": "^1.0.2",
+			"aws-amplify-react": "^1.0.2",
+			"express": "^4.16.3",
+			"react": "^16.4.1",
+			"react-dom": "^16.4.1",
+			"react-router-dom": "^4.3.1",
+			"react-scripts": "1.1.4"
+		},
+		"scripts": {
+			"start": "react-scripts start",
+			"build": "react-scripts build",
+			"test": "react-scripts test --env=jsdom",
+			"eject": "react-scripts eject"
+		},
+		"description": "Angelo De Laurentis under John Morton for Cal Poly ITS",
+		"main": "index.js",
+		"devDependencies": {},
+		"repository": {
+			"type": "git",
+			"url": "git+https://github.com/angelodel01/react-demo.git"
+		},
+		"author": "",
+		"license": "ISC",
+		"bugs": {
+			"url": "https://github.com/angelodel01/react-demo/issues"
+		},
+		"homepage": "https://github.com/angelodel01/react-demo#readme"
+	},
+	"framework": "react",
+	"initialStage": "clean-slate",
+	"strategy": "create"
+}
