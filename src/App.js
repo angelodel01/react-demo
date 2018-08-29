@@ -122,7 +122,8 @@ class Repo extends React.Component {
             </div>
           <Link to="/"><button className= "button">Home</button></Link>
         </div>
-     )}
+      )
+   }
 }
 
 // This page mimics the functionality of the "simple search" widget on the portal
